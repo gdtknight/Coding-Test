@@ -16,7 +16,7 @@ public class Main {
     int answer = 0;
     while (idx != -1) {
       answer++;
-      idx = S.indexOf(pN, idx + 1);
+      idx = S.indexOf(pN, idx + 2);
     }
     System.out.println(answer);
   }
