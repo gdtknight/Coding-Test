@@ -13,7 +13,6 @@ public class Main {
       int N = Integer.parseInt(br.readLine());
       String arrStr = br.readLine();
       String[] numStr = arrStr.substring(1, arrStr.length() - 1).split(",");
-      int[] nums = new int[100_001];
       int leftIdx = 0;
       int rightIdx = N - 1;
 
