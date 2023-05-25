@@ -26,18 +26,16 @@ public class Main {
 
     int count = 0;
     while (left < right) {
-      if (ingredients[left] + ingredients[right] == M) {
-        left++;
-        right--;
-        count++;
-      } else if (ingredients[left] + ingredients[right] > M) {
+      if (ingredients[left] + ingredients[right] > M) {
         right--;
       } else if (ingredients[left] + ingredients[right] < M) {
         left++;
+      } else {
+        left++;
+        right--;
+        count++;
       }
     }
-
-    if (left == right && ingredients[left] == M) count++;
 
     System.out.println(count);
   }
