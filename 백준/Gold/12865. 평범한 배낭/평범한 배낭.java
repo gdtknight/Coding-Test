@@ -30,12 +30,7 @@ public class Main {
       }
     }
 
-    int maxVal = 0;
-    for (int idx = 0; idx <= K; idx++) {
-      if (maxVal < result[N][idx]) maxVal = result[N][idx];
-    }
-
-    System.out.println(maxVal);
+    System.out.println(result[N][K]);
 
     br.close();
   }
