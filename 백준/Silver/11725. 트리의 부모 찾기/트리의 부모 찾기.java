@@ -13,7 +13,11 @@ public class Main {
 
     StringTokenizer st;
 
-    Map<Integer, ArrayList<Integer>> adjustListMap = new HashMap<>();
+    ArrayList<Integer>[] adjust = new ArrayList[N + 1];
+
+    for (int i = 1; i <= N; i++) {
+      adjust[i] = new ArrayList<>();
+    }
 
     for (int i = 0; i < N - 1; i++) {
       st = new StringTokenizer(br.readLine(), " ");
@@ -21,22 +25,17 @@ public class Main {
       int v1 = Integer.parseInt(st.nextToken());
       int v2 = Integer.parseInt(st.nextToken());
 
-      ArrayList<Integer> vv1 = adjustListMap.getOrDefault(v1, new ArrayList<>());
-      vv1.add(v2);
-      ArrayList<Integer> vv2 = adjustListMap.getOrDefault(v2, new ArrayList<>());
-      vv2.add(v1);
-      adjustListMap.put(v1, vv1);
-      adjustListMap.put(v2, vv2);
+      adjust[v1].add(v2);
+      adjust[v2].add(v1);
     }
 
     Queue<Integer> queue = new LinkedList<>();
     queue.offer(1);
 
-    while(!queue.isEmpty()) {
+    while (!queue.isEmpty()) {
       int cur = queue.poll();
-      ArrayList<Integer> adjustList = adjustListMap.get(cur);
 
-      for (int child : adjustList) {
+      for (int child : adjust[cur]) {
         if (parent[child] == 0) {
           parent[child] = cur;
           queue.offer(child);
