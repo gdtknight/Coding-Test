@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
@@ -8,6 +6,7 @@ import java.util.StringTokenizer;
 public class Main {
   public static void main(String[] args) throws IOException {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
     StringTokenizer st = new StringTokenizer(br.readLine(), " ");
 
@@ -57,10 +56,11 @@ public class Main {
 
       int lastIdx = lIdx;
 
-      if (lastIdx == dots.length || end != dots[lastIdx]) System.out.println(lastIdx - startIdx);
-      else System.out.println(lastIdx - startIdx + 1);
+      if (lastIdx == dots.length || end != dots[lastIdx]) bw.write((lastIdx - startIdx) + "\n");
+      else bw.write((lastIdx - startIdx + 1)+"\n");
     }
-
+    bw.flush();
     br.close();
+    bw.close();
   }
 }
