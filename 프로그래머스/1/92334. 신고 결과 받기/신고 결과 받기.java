@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Arrays;
 import java.util.Objects;
 
-
 class Solution {
     
     public int[] solution(String[] id_list, String[] report, int k) {
@@ -19,11 +18,16 @@ class Solution {
         
         for (String reportRecord : report) {
             String[] userIds = reportRecord.split(" ");
-            userMap.get(userIds[0]).reportUser(userMap.get(userIds[1]));
-            if(userMap.get(userIds[1]).getReportedCount() >= k) {
+            
+            User reporter = userMap.get(userIds[0]);
+            User reported = userMap.get(userIds[1]);
+            
+            reporter.reportUser(reported);
+            
+            if(reported.getReportedCount() >= k) {
                 userMap.values().stream()
-                    .filter(user -> user.getReportsUserSet().contains(userMap.get(userIds[1])))
-                    .forEach(user -> user.getStoppedUserSet().add(userMap.get(userIds[1])));
+                    .filter(user -> user.getReportsUserSet().contains(reported))
+                    .forEach(user -> user.getStoppedUserSet().add(reported));
             }
         }
         
