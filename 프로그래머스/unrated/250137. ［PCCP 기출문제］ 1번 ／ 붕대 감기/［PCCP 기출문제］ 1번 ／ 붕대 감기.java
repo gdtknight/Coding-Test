@@ -4,19 +4,14 @@ class Solution {
         int hp = health;
         
         for (int[] attack : attacks) {
-            time = attack[0];
-            System.out.printf(
-                "Before HP: %d, Recover : %d", 
-                hp, 
-                (time - prev - 1) * bandage[1] + (time - prev - 1) / bandage[0] * bandage[2]);
-            hp = Math.min(health, hp + (time - prev - 1) * bandage[1] + (time - prev - 1) / bandage[0] * bandage[2]); 
+            time = attack[0] - prev - 1;
+            
+            hp = Math.min(health, hp + time * bandage[1] + time / bandage[0] * bandage[2]); 
             hp = Math.max(0, hp - attack[1]);
             
             if (hp <= 0) return -1;
             
-            System.out.println(", After HP : " + hp);
-            
-            prev = time;
+            prev = attack[0];
         }
         
         return hp;
