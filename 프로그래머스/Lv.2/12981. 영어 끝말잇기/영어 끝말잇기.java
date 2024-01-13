@@ -12,7 +12,7 @@ class Solution {
             String curStr = words[idx];
             char curChar = curStr.charAt(0);
             
-            if (!used.add(words[idx]) || prevChar != curChar)  {
+            if (!used.add(curStr) || prevChar != curChar)  {
                 return new int[]{idx % n + 1, idx / n + 1};
             }
         }
