@@ -8,65 +8,33 @@ class Solution {
         final int MAX_WEIGHT,
         final int[] WEIGHTS
     ) {
+        Queue<Truck> bridge = new LinkedList<>();
         
-        int currentTime = 1;
+        int currentTime = 0;
         int currentWeight = 0;
         
-        int idx = 0;
-        
-        int weight = Integer.MAX_VALUE;
-        
-        Truck truck = null;
-        
-        Queue<Truck> bridge = new LinkedList<>();
-        Queue<Truck> arrived = new LinkedList<>();
-        
-        // System.out.println("경과시간: 0" + ", 다리를 건너는 트럭:" + bridge);
-        
-        while (idx < WEIGHTS.length) {
-            // System.out.println("경과시간:" + currentTime + ", 다리를 지난 트럭:" + arrived + ", 다리를 건너는 트럭:" + bridge);
-            
-            // 다리를 건너는 트럭이 없으면 바로 건너면 됨.
-            if (bridge.isEmpty()) {
-                bridge.offer(Truck.create(WEIGHTS[idx], currentTime++));
-                currentWeight += WEIGHTS[idx];
-                idx++;
-                continue;
+        boolean flag = true;
+        for (int weight : WEIGHTS) {
+            while (currentWeight + weight > MAX_WEIGHT) {
+                if (bridge.peek().getEntryTime() + BRIDGE_LENGTH >= currentTime++) {
+                    Truck truck = bridge.poll();
+                    currentWeight -= truck.getWeight();
+                    flag = false;
+                }
             }
             
-            // 다리 위에 트럭이 있는 경우 
-            
-            // 도착한 트럭
-            if (bridge.peek().getEntryTime() + BRIDGE_LENGTH == currentTime) {
-                truck = bridge.poll();
-                currentWeight -= truck.getWeight();
-                arrived.offer(truck);
-            }
-                
-            
-            // 다리를 건널 수 있는 경우
-            if (currentWeight + WEIGHTS[idx] <= MAX_WEIGHT) {
-                bridge.offer(Truck.create(WEIGHTS[idx], currentTime));
-                currentWeight += WEIGHTS[idx];
+            if (flag) {
                 currentTime++;
-                idx++;
-                continue;
+            } else {
+                flag = true;
             }
             
-            // 다리를 건널 수 없는 경우 앞선 트럭이 다리를 건널 때까지 시간을 흘려보냄.
-            currentTime++;
+            bridge.offer(Truck.create(weight, currentTime));
+            currentWeight += weight;
         }
         
-        while (!bridge.isEmpty()) {
-            if (bridge.peek().getEntryTime() + BRIDGE_LENGTH == currentTime) {
-                truck = bridge.poll();
-                currentWeight -= truck.getWeight();
-                arrived.offer(truck);
-            }
-            currentTime++;
-        }
         
-        return currentTime - 1;
+        return currentTime + BRIDGE_LENGTH;
     }
 }
 
@@ -89,9 +57,5 @@ class Truck {
     
     public int getEntryTime() {
         return ENTRY_TIME;
-    }
-    
-    public String toString() {
-        return "{w:" + WEIGHT + ",t:" + ENTRY_TIME + "}";
     }
 }
