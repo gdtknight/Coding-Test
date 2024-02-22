@@ -2,25 +2,32 @@ import java.util.Arrays;
 
 class Solution {
     public long solution(int n, int[] times) {
-        Arrays.sort(times);
+        int minTime = Integer.MAX_VALUE;
+        int maxTime = 0;
         
-        long min = (long)n / (long)times.length * (long)times[0];
-        long max = (long)n / (long)times.length * (long)times[times.length - 1];
+        for (int time : times) {
+            minTime = Math.min(minTime, time);
+            maxTime = Math.max(maxTime, time);
+        }
+        
+        long min = (long) n / (long) times.length * (long) minTime;
+        long max = (long) n / (long) times.length * (long) maxTime;
+        
+        long mid;
+        long people = 0;
         
         while(min < max) {
-            long mid = min + (max - min) / 2;
+            mid = min + (max - min) / 2;
+            people = 0;
             
-            long people = 0;
-            for (int i = 0 ; i < times.length; i++) {
-                people += mid / (long)times[i];
+            for (int time : times) {
+                people += mid / (long)time;
             }
             
-            if (people < n) {
-                min = mid + 1;
-            } else {
-                max = mid;
-            }
+            if (people < n)   min = mid + 1;
+            else              max = mid;
         }
+        
         return min;
     }
 }
