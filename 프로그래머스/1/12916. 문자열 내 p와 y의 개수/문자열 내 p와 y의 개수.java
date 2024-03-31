@@ -8,8 +8,6 @@ class Solution {
             if (c == 'y' || c =='Y') yCnt++;
         }
 
-        return pCnt == 0 && yCnt == 0
-			? true
-            : pCnt == yCnt;
+        return pCnt == yCnt;
     }
 }
