@@ -9,6 +9,6 @@ class Solution {
             if (idx + 2 <= n) arr[idx + 2] = (arr[idx + 2] + arr[idx]) % 1234567;
         }
         
-        return arr[n] % 1234567;
+        return arr[n];
     }
 }
