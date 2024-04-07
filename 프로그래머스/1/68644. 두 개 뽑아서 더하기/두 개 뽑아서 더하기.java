@@ -1,10 +1,9 @@
-import java.util.HashSet;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Set;
+import java.util.TreeSet;
 
 class Solution {
     public int[] solution(int[] numbers) {
-        HashSet<Integer> set = new HashSet<Integer>();
+        Set<Integer> set = new TreeSet<Integer>();
         
         for (int i = 0; i < numbers.length - 1; i++) {
             for (int j = i + 1; j < numbers.length; j++) {
