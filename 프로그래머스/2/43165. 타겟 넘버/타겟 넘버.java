@@ -14,16 +14,14 @@ class Solution {
         while(!stack.isEmpty()) {
             cur = stack.pop();
             
-            if (cur.getIdx() != numbers.length - 1) {
-                stack.push(new Sum(cur.getIdx() + 1, cur.getSum() + numbers[cur.getIdx() + 1]));
-                stack.push(new Sum(cur.getIdx() + 1, cur.getSum() - numbers[cur.getIdx() + 1]));
-                continue;
-            }
-            
             if (cur.getIdx() == numbers.length - 1 && cur.getSum() == target) {
                 answer++; 
             }
             
+            if (cur.getIdx() < numbers.length - 1) {
+                stack.push(new Sum(cur.getIdx() + 1, cur.getSum() + numbers[cur.getIdx() + 1]));
+                stack.push(new Sum(cur.getIdx() + 1, cur.getSum() - numbers[cur.getIdx() + 1]));
+            }
         }
         
         return answer;
