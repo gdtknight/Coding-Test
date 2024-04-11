@@ -4,7 +4,7 @@ import java.util.Stack;
 
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
-        int NUM_OF_WORKS = progresses.length;
+        final int NUM_OF_WORKS = progresses.length;
         
         int[] days = new int[NUM_OF_WORKS];
         
