@@ -1,46 +1,105 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.lang.Comparable;
+
 import java.util.Stack;
-import java.util.Comparator;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.Map;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.PriorityQueue;
 
 class Solution {
+    
     public String[] solution(String[][] tickets) {
         final String START = "ICN";
-        final Map<String, PriorityQueue<String>> ticketMap = new HashMap<>();
-        final List<String> answer = new ArrayList<>();
+        final int MAX_COUNT = tickets.length;
+        
+        final Stack<String> answer = new Stack<>();
+        final Map<String, PriorityQueue<Ticket>> ticketMap = new HashMap<>();
+        final Set<Ticket> usedTickets = new HashSet<>();
         
         for (String[] ticket : tickets) {
             String depature = ticket[0];
             String arrival = ticket[1];
             
-            PriorityQueue<String> arrivals = ticketMap.getOrDefault(depature, new PriorityQueue<String>());
+            Ticket newTicket = new Ticket(depature, arrival);
             
-            arrivals.offer(arrival);
+            PriorityQueue<Ticket> arrivals = ticketMap.getOrDefault(depature, new PriorityQueue<Ticket>());
+            
+            arrivals.offer(newTicket);
             
             ticketMap.put(depature, arrivals);
         }
         
-        Stack<String> stack = new Stack<>();
+        Stack<Ticket> stack = new Stack<>();
+        stack.push(ticketMap.get(START).peek());
+        usedTickets.add(ticketMap.get(START).peek());
         
-        stack.push(START);
-        
+        out :
         while(!stack.isEmpty()) {
-            String depature = stack.peek();
-            PriorityQueue<String> pq = ticketMap.get(depature);
+            Ticket current = stack.peek();
             
-            if (pq != null && !pq.isEmpty()) {
-                stack.push(pq.poll());
-            } else {
-                answer.add(stack.pop());
+            Iterator<Ticket> it = ticketMap.getOrDefault(current, new PriorityQueue<Ticket>()).iterator();
+            
+            while(it.hasNext()) {
+                Ticket next = it.next();
+                if (usedTickets.add(next)) {
+                    stack.push(next);
+                    continue out;
+                }
             }
+            
+            answer.push(current.arrival());
+            stack.pop();
         }
         
-        Collections.reverse(answer);
+        answer.push(START);
         
         return answer.stream().toArray(String[]::new);
+    }
+}
+    
+
+class Ticket implements Comparable<Ticket> {
+    String depature;
+    String arrival;
+    
+    Ticket (String depature, String arrival) {
+        this.depature = depature;
+        this.arrival = arrival;
+    }
+    
+    public String depature() {
+        return depature;
+    }
+    
+    public String arrival() {
+        return arrival;
+    }
+    
+    public int compareTo(Ticket t) {
+        return depature.equals(t.depature())
+            ? arrival.compareTo(t.arrival())
+            : depature.compareTo(t.depature());
+    }
+    
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        
+        if (!(o instanceof Ticket)) return false;
+        
+        Ticket t = (Ticket) o;
+        
+        return depature.equals(t.depature()) && arrival.equals(t.arrival());
+    }
+    
+    public int hashCode() {
+        return depature.hashCode() * 31 + arrival.hashCode();
+    }
+    
+    public String toString() {
+        return "[" + depature + ", " + arrival + "]";
     }
 }
