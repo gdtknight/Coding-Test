@@ -3,6 +3,16 @@ import java.util.LinkedList;
 
 class Solution {
     public int solution(int n, int[][] wires) {
+        /**
+        *
+        * 메인 아이디어
+        * : 전선 정보를 바탕으로 인접 행렬을 생성한다.
+        *   각 전선을 절단할 경우 해당 전선에 연결되어 있던
+        *   두 송전탑을 각각 시작 노드로 하여 BFS 실시
+        *   그 결과의 차이가 가장 작은 경우를 계산한다.
+        *
+        **/
+        
         boolean[][] towerMap = new boolean[n + 1][n + 1];
         
         for (int i = 0; i < wires.length; i++) {
@@ -64,7 +74,6 @@ class Solution {
             towerMap[wires[i][0]][wires[i][1]] = true;
             towerMap[wires[i][1]][wires[i][0]] = true;
         }
-        
         
         return answer;
     }
