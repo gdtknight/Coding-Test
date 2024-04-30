@@ -8,51 +8,27 @@ class Solution {
     static boolean[] prime = new boolean[101];
     
     public int solution(int[] arr) {
-        Arrays.sort(arr);
+        NLCM c = new NLCM();
         
-        final int MAX = 50;
-        
-        TreeMap<Integer, Integer> primeCount = new TreeMap<>();
-        
-        Arrays.fill(prime, true);
-        
-        prime[0] = false;
-        prime[1] = false;
-        
-        for (int num = 2; num <= MAX; num++) {
-            if (!prime[num]) continue;
-            
-            primeCount.put(num, 0);
-            
-            for (int idx = num + num; idx <= MAX; idx += num) {
-                prime[idx] = false;
-            }
+        return c.nlcm(arr);
+    }
+}
+
+
+class NLCM {
+    public int nlcm(int[] num) {
+        int answer = num[0], g;
+        for (int i = 1; i < num.length; i++) {
+            g = gcd(answer, num[i]);
+            answer = g * (answer / g) * (num[i] / g);
         }
-        
-        System.out.println(primeCount.keySet());
-        
-        for (int num : arr) {
-            for (int prime : primeCount.keySet()) {
-                if (prime > num) break;
-                
-                int count = 0;
-                int temp = num;
-                
-                while (temp % prime == 0) {
-                    count++;
-                    temp /= prime;
-                }
-                
-                primeCount.put(prime, Math.max(primeCount.get(prime), count));
-            }
-        }
-        
-        int answer = 1;
-        
-        for(Entry<Integer, Integer> e : primeCount.entrySet()) {
-            answer *= (int) Math.pow(e.getKey(), e.getValue());
-        }
-        
         return answer;
+    }
+
+    public int gcd(int a, int b) {
+        if (a > b)
+            return (a % b == 0) ? b : gcd(b, a % b);
+        else
+            return (b % a == 0) ? a : gcd(a, b % a);
     }
 }
