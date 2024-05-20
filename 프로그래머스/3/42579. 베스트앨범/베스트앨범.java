@@ -1,96 +1,45 @@
-import java.lang.Comparable;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-class Solution {
-    public int[] solution(String[] genres, int[] plays) {
-        final int LEN = genres.length;
-        
-        Map<String, Genre> genreMap = new HashMap<>();
-        
-        for (int idx = 0; idx < LEN; idx++) {
-            Genre curGenre = genreMap.getOrDefault(genres[idx], new Genre());
-            Song curSong = new Song(idx, plays[idx]);
-            curGenre.addSong(curSong);
-            genreMap.put(genres[idx], curGenre);
-        }
-        
-        PriorityQueue<Genre> genrePq = new PriorityQueue<>();
-        
-        genreMap.values().forEach(genrePq::offer);
-        
-        List<Integer> indexes = new ArrayList<>();
-        
-        while(!genrePq.isEmpty()) {
-            Genre curGenre = genrePq.poll();
-            PriorityQueue<Song> songs = curGenre.songs();
-            
-            if (!songs.isEmpty()) {
-                indexes.add(songs.poll().id());
-            }
-            
-            if (!songs.isEmpty()) {
-                indexes.add(songs.poll().id());
-            }
-        }
-        
-        return indexes.stream().mapToInt(Integer::valueOf).toArray();
-    }
-}
+public class Solution {
+  public class Music implements Comparable<Music>{
 
-class Genre implements Comparable<Genre> {
-    private PriorityQueue<Song> songs = new PriorityQueue<>();
-    private int totalPlayCount;
-    
-    public Genre() {
-        this.songs = new PriorityQueue<>();
-        this.totalPlayCount = 0;
-    }
-    
-    public void addSong(Song song) {
-        songs.offer(song);
-        totalPlayCount += song.playCount();
-    }
-    
-    public int totalPlayCount() {
-        return totalPlayCount;
-    }
-    
-    public PriorityQueue<Song> songs() {
-        return songs;
-    }
-    
-    @Override
-    public int compareTo(Genre other) {
-        return Integer.compare(other.totalPlayCount(), totalPlayCount);
-    }
-}
-
-class Song implements Comparable<Song> {
+    private int played;
     private int id;
-    private int playCount;
-    
-    Song(int id, int playCount) {
-        this.id = id;
-        this.playCount = playCount;
+    private String genre;
+
+    public Music(String genre, int played, int id) {
+      this.genre = genre; 
+      this.played = played;
+      this.id = id;
     }
-    
-    public int id() {
-        return id;
-    }
-    
-    public int playCount() {
-        return playCount;
-    }
-    
+
     @Override
-    public int compareTo(Song song) {
-        return playCount == song.playCount()
-            ? Integer.compare(id, song.id())
-            : Integer.compare(song.playCount(), playCount);
+    public int compareTo(Music other) {
+      if(this.played == other.played) return this.id - other.id;
+      return other.played - this.played;
     }
+
+    public String getGenre() {return genre;}
+  }
+
+  public int[] solution(String[] genres, int[] plays) {
+    return IntStream.range(0, genres.length)
+        .mapToObj(i -> new Music(genres[i], plays[i], i))
+        .collect(Collectors.groupingBy(Music::getGenre))
+        .values().stream()
+        .sorted((a, b) -> sum(b) - sum(a))
+        .flatMap(value -> value.stream().sorted().limit(2))
+        .mapToInt(x -> x.id)
+        .toArray();
+  }
+
+  private int sum(List<Music> value) {
+    int answer = 0;
+    for (Music music : value) {
+      answer+=music.played;
+    }
+    return answer;
+  }
 }
