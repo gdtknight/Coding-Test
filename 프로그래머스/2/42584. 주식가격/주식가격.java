@@ -1,6 +1,3 @@
-import java.util.Deque;
-import java.util.LinkedList;
-
 class Solution {
     public int[] solution(int[] prices) {
         final int N = prices.length;
