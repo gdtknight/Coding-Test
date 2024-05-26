@@ -5,10 +5,7 @@ class Solution {
         return Arrays.stream(numbers)
             .mapToObj(String::valueOf)
             .sorted((n1, n2) -> (n2 + n1).compareTo(n1 + n2))
-            .reduce((n1, n2) -> {
-                if ("0".equals(n1) && "0".equals(n2)) return "0";
-                return n1 + n2;
-            })
+            .reduce((n1, n2) -> "0".equals(n1) && "0".equals(n2) ? "0" : n1 + n2)
             .orElse("0");
     }
 }
