@@ -26,7 +26,7 @@ class Solution {
             return;
         }
         
-        if (current.length() >= 5 || find) return;
+        if (find || current.length() >= 5) return;
         
         for (char c : ALPHABETS) {
             count++;
