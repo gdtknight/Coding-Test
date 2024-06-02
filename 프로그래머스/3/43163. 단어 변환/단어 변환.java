@@ -1,75 +1,76 @@
-import java.util.Arrays;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Queue;
 import java.util.LinkedList;
+import java.util.Set;
+import java.util.HashSet;
 
 class Solution {
     public int solution(String begin, String target, String[] words) {
+        Queue<Node> bfs = new LinkedList<>();
+        Set<String> visited = new HashSet<>();
+        bfs.offer(new Node(begin, 0));
+        visited.add(begin);
         
-        Map<String, Integer> idxMap = new HashMap<>();
-        
-        for (int idx = 0; idx < words.length; idx++) {
-            idxMap.put(words[idx], idx);
-        }
-        
-        // target 이 words에 존재하지 않는 경우 도달 불가능
-        if (!idxMap.containsKey(target)) return 0;
-        if (!idxMap.containsKey(begin)) idxMap.put(begin, idxMap.size());
-        
-        
-        int size = idxMap.size();
-        
-        Queue<Integer> queue = new LinkedList<>();
-        boolean[][] graph = new boolean[size][size];
-        int[] counts = new int[size];
-        
-        int start = idxMap.get(begin);
-        
-        for (int i = 0; i < words.length; i++) {
-            if (linked(begin, words[i])) {
-                counts[i] = 1;
-                queue.offer(i);
-            }
+        while(!bfs.isEmpty()) {
+            Node cur = bfs.poll();
+            if (cur.word().equals(target)) return cur.count();
             
-            for (int j = i+1; j < words.length; j++) {
-                if (linked(words[i], words[j])) {
-                    graph[i][j] = true;
-                    graph[j][i] = true;
-                }
+            for (String word : words) {
+                if (linked(cur.word(), word) && visited.add(word)) {
+                    bfs.offer(new Node(word, cur.count() + 1)); 
+                } 
             }
         }
         
-        while (!queue.isEmpty()) {
-            int from = queue.poll();
-            int count = counts[from];
-            
-            for (String next : idxMap.keySet()) {
-                int to = idxMap.get(next);
-                if (counts[to] == 0 && graph[from][to]) {
-                    if (next.equals(target)) return count + 1;
-                    counts[to] = counts[from] + 1;
-                    queue.offer(to);
-                    System.out.printf("단어 : %s, 카운트 : %d\n", next, count + 1);
-                }
-			}
-       	}
-        
-        return counts[idxMap.get(target)];
+        return 0;
     }
     
-    public boolean linked(String s1, String s2) {
-        final int MAX_MATCH_COUNT = s1.length() - 1;
-        
+    private boolean linked(String word, String target) {
+        final int LEN = word.length();
         int count = 0;
         
-        if (s1.length() != s2.length())
-            throw new RuntimeException("길이가 다릅니다");
-        
-        for (int idx = 0; idx < s1.length(); idx++) {
-            if (s1.charAt(idx) == s2.charAt(idx)) count++;
+        for (int idx = 0; idx < LEN; idx++) {
+            if (word.charAt(idx) != target.charAt(idx)) count++;
+            
+            if (count > 1) return false;
         }
         
-        return count == MAX_MATCH_COUNT;
+        return count == 1;
+    }
+}
+
+class Node {
+    private String word;
+    private int count;
+    
+    Node (String word, int count) {
+        this.word = word;
+        this.count = count;
+    }
+    
+    public boolean isWord(String word) {
+        return this.word.equals(word);
+    }
+    
+    public String word() {
+        return word;
+    }
+    
+    public int count() {
+        return count;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Node)) return false;
+        
+        Node node = (Node) o;
+        
+        return word.equals(node.word());
+    }
+    
+    @Override
+    public int hashCode() {
+        return word.hashCode();
     }
 }
