@@ -40,17 +40,6 @@ class Solution {
             }
         }
         
-        // Dest 확인
-        for (int row = 1; row <= N; row++) {
-            for (int col = 1; col <= N; col++) {
-                if (dest[row][col]) System.out.printf("O ");
-                else                System.out.printf("X ");
-            }
-            
-            System.out.println();
-        }
-        
-        
         // 순위 결정자 확인
         int answer = 0;
         
