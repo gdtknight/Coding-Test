@@ -1,9 +1,12 @@
-import java.util.StringTokenizer;
-import java.util.Arrays;
-import java.util.Objects;
-
 class Solution {
     public int[] solution(String[] park, String[] routes) {
+        /**
+        *
+        * 메인 아이디어
+        * : 구현문제. 요구에 맞게 그대로 구현한다.
+        *   코드 가독성을 위해 Enum 을 활용해봄.
+        *
+        **/
         final int HEIGHT = park.length;
         final int WIDTH = park[0].length();
         
