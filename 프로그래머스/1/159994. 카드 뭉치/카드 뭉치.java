@@ -4,10 +4,8 @@ class Solution {
         
         for (String word : goal) {
             if (idx1 < cards1.length && word.equals(cards1[idx1])) {
-                System.out.print(cards1[idx1] + " ");
                 idx1++;
             } else if (idx2 < cards2.length && word.equals(cards2[idx2])) {
-                System.out.print(cards2[idx2] + " ");
                 idx2++;
             } else {
                 return "No";
