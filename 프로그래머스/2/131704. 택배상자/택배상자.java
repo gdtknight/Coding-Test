@@ -2,43 +2,27 @@ import java.util.Stack;
 
 class Solution {
     public int solution(int[] order) {
+        Stack<Integer> sub = new Stack<>();
         int answer = 0;
-        Stack<Integer> mainBelt = new Stack<>();
-        Stack<Integer> secondBelt = new Stack<>();
-        
-        for (int num = order.length; num > 0; num--)
-            mainBelt.push(num);
-        
-        for (int target: order) {
-            if (!mainBelt.isEmpty() && mainBelt.peek() == target) {
-                // System.out.printf("[mainBelt] Target pop : %d\n", target);
+        int box = 1;                  // 컨베이어에서 다음에 올 상자 번호
+
+        for (int target : order) {
+            // target 이상이 될 때까지 컨베이어에서 보조 벨트로 이동
+            while (box <= order.length
+                   && (sub.isEmpty() || sub.peek() != target)) {
+                sub.push(box++);
+            }
+
+            // 보조 벨트의 top이 target인지 확인
+            if (!sub.isEmpty() && sub.peek() == target) {
+                sub.pop();
                 answer++;
-                mainBelt.pop();
-                continue ;
+            } else {
+                // 더 이상 순서를 맞출 수 없음
+                break;
             }
-            if (!secondBelt.isEmpty() && secondBelt.peek() == target) {
-                // System.out.printf("[secondBelt] Target pop : %d\n", target);
-                answer++;
-                secondBelt.pop();
-                continue ;
-            }
-            // if (!mainBelt.isEmpty() && !secondBelt.isEmpty())
-                // break ;
-            if (mainBelt.isEmpty() && !secondBelt.isEmpty() && secondBelt.peek() != target)
-                break ;
-            // System.out.printf("Target: %d\n", target);
-            // System.out.printf("MainBelt: %d\n", mainBelt.peek());
-            while (!mainBelt.isEmpty() && mainBelt.peek() != target) {
-                secondBelt.push(mainBelt.pop());
-            }
-            while (!mainBelt.isEmpty() && mainBelt.peek() == target) {
-            	answer++;
-                mainBelt.pop();
-            }
-            // System.out.println(mainBelt);
-            // System.out.println(secondBelt);
         }
-        
+
         return answer;
     }
 }
